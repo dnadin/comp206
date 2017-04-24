@@ -1,0 +1,33 @@
+#!/bin/bash
+
+#Check command line syntax and set variables
+if [ "$1" = "-o" ]
+then
+	switch="$1"
+	executable="$2"
+	filenames="${@:3}"
+	echo "$filenames"
+else
+	filenames="${@:1}"
+fi		
+
+if [ "$filenames" = "null" ];
+then
+	echo "You are missing file names. Type in: compile -o executable_name file_names"
+	exit
+fi
+
+#Copy files to backup
+cp -r * ../backup/
+
+#Compile
+touch errors
+if [ "$1" = "-o" ]
+then
+	gcc -o "$executable" "$filenames" 2> errors
+else
+	gcc -o "$filenames" 2> errors
+fi
+
+#Display errors
+more errors
